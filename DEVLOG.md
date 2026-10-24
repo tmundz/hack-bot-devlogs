@@ -5,6 +5,33 @@ Most recent first.
 
 ---
 
+## 2026-10-24 — Offline test harness for failure & verification paths ✅
+
+**Milestone.** The hardest-to-test parts of the system — what happens when the AI provider misbehaves,
+and how the verification stage treats a reviewer's verdict — can now be exercised **offline,
+deterministically, with no model spend**, using a stand-in that imitates the provider.
+
+### Added
+- **Simulated-provider test harness** — a stand-in for the AI provider that returns scripted outcomes
+  (normal result, provider error, garbled/truncated response, missing output) so the system's error
+  handling can be tested repeatably and for free, instead of only against a live paid model.
+
+### Confirmed by the new tests
+- Provider failures **surface honestly and never corrupt a run's state** — a bad or missing response is
+  turned into a clean, typed failure, not a silent wrong answer.
+- The verification stage handles a reviewer's verdict correctly: a rejected finding stays unconfirmed,
+  and it **fails closed** — if the independent review flags a serious gap, the finding is not confirmed
+  even when the top-line verdict looked positive.
+
+_Scope note: these tests validate how the system **handles** provider failures and review verdicts, not
+the judgement quality of a real model — that still needs live runs, done under an explicit budget._
+
+### Rough next steps
+- Richer, longer-lived application knowledge that survives across runs.
+- A small, budget-capped live run to validate real-model judgement end to end.
+
+---
+
 ## 2026-10-24 — Resilience + readiness preflight ✅
 
 **Milestone.** The run itself got harder to break. The system can now notice when a run is stuck,
