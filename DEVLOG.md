@@ -5,6 +5,32 @@ Most recent first.
 
 ---
 
+## 2026-10-24 — Resilience + readiness preflight ✅
+
+**Milestone.** The run itself got harder to break. The system can now notice when a run is stuck,
+pick up safely after an interruption without redoing finished work, refuse to run the same job twice
+at once, and confirm the whole setup is healthy **before** spending anything.
+
+### Added
+- **Stall detection** — a run that is alive but making no progress past a time bound is flagged for the
+  operator. It is never force-killed (that would throw away work already done); the operator decides.
+- **Safe resume + single-run guard** — re-running skips work already completed for the current state,
+  refuses to start a second copy of a job that is already in flight, and recovers cleanly if an earlier
+  run died partway through (a half-finished run is treated as unfinished, not as done).
+- **Readiness preflight ("doctor")** — one command checks the whole chain before a run: configuration is
+  valid, the enforcement gateway and supporting pieces are reachable, and the required components are
+  present. It fails loudly and clearly if anything is missing, so no budget is spent on a half-ready setup.
+
+### Fixed
+- A latent liveness-check bug: a job lock held by another *live* process could be mistakenly treated as
+  stale and reclaimed. Now a live holder is always respected; only a genuinely dead one is cleared.
+
+### Rough next steps
+- Richer, longer-lived application knowledge that survives across runs.
+- Broaden automated coverage across more vulnerability classes.
+
+---
+
 ## 2026-10-24 — Independent finding-verification stage ✅
 
 **Milestone.** The independent validation stage flagged as "next" earlier today now exists. Before any
