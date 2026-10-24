@@ -5,6 +5,29 @@ Most recent first.
 
 ---
 
+## 2026-10-24 — Independent finding-verification stage ✅
+
+**Milestone.** The independent validation stage flagged as "next" earlier today now exists. Before any
+finding can be treated as real, it is first checked **by deterministic code against its own recorded
+evidence** — and only if that passes does a separate second-opinion model get involved.
+
+### Added
+- **Deterministic evidence replay** — for every finding, the system confirms each piece of evidence it
+  cites genuinely exists and is **unaltered** (tamper-evident, content-addressed), and that the recorded
+  evidence actually backs the claim. A finding that cites missing, altered, or unsupporting evidence is
+  **rejected automatically and never escalated** — no model is even consulted. This kills fabricated or
+  misleading findings at the door.
+- **Second-opinion gate** — only findings that pass the deterministic check go to an independent review
+  by a **different model than the one that produced them**. A finding counts as confirmed only when both
+  the deterministic check and the independent review agree. Fails closed otherwise.
+- Each verification is recorded with its own outcome state, so a finding's status is always auditable.
+
+### Rough next steps
+- Detect stalled runs (alive but making no progress) and surface them.
+- Resume safely after an interruption without repeating completed work.
+
+---
+
 ## 2026-10-24 — Reliability groundwork + full internal validation audit
 
 **Milestone.** A day spent hardening foundations instead of adding attack coverage. The system now keeps a
