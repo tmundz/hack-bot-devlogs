@@ -5,6 +5,42 @@ Most recent first.
 
 ---
 
+## 2026-10-24 — Reliability groundwork + full internal validation audit
+
+**Milestone.** A day spent hardening foundations instead of adding attack coverage. The system now keeps a
+durable, structured record of every automated run, and the whole harness went through a comprehensive
+internal validation and regression audit. No live target run was performed — this validated the machinery,
+not a new investigation.
+
+### Added
+- **Per-run record keeping** — every automated step now writes a record with a *typed outcome*
+  (ran / blocked / failed / skipped-for-budget) and a failure reason, so a run's result is always knowable
+  after the fact. First piece of the observability-and-recovery layer.
+- **Per-run resource accounting** — each run now captures how much model work it used, recorded honestly
+  (left blank rather than guessed when a provider doesn't report it). Groundwork for spend awareness.
+- **Standing automated test suite** — one command runs static checks plus deterministic, offline tests for
+  the safety gateway, the state-tracking logic, and the run-routing error handling.
+
+### Fixed
+- Corrected an outcome-classification edge case so a run is only marked "blocked" when it genuinely was.
+
+### Validation audit (safety-first, offline)
+- Static checks (compile/vet) and deterministic tests across the gateway and supporting layers — **all
+  green**. Confirmed the gateway **fails closed**: out-of-scope hosts, disallowed methods, unknown risk
+  levels, unanswered approvals, cross-program requests, and spent budgets are all refused.
+- Confirmed the automation can reach a target **only** through the audited tool set, and that state
+  tracking never marks a finding "verified" on its own.
+- Produced a prioritized, incremental improvement roadmap, and a readiness assessment: the deterministic
+  core is reliable; the model-driven and end-to-end paths remain to be validated under controlled live runs.
+
+### Rough next steps
+- Build the independent **finding-verification stage** — a deterministic replay plus a second-opinion
+  review before any finding is treated as real.
+- Turn the captured per-run usage into a spend budget with a stop-when-exhausted limit.
+- Broaden automated coverage across more vulnerability classes.
+
+---
+
 ## 2026-10-23 — First autonomous end-to-end run ✅
 
 **Milestone.** The system completed its first fully autonomous test run from start to finish, entirely
