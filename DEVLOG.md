@@ -5,6 +5,64 @@ Most recent first.
 
 ---
 
+## 2026-10-27 — Bounded autonomous loop, operator workspace & programmatic report linting ✅
+
+**Milestone.** The orchestration layer reached end-to-end maturity. The automation can now execute bounded autonomous testing loops with automatic stagnation detection, project complete state and evidence into an operator dashboard graph, and programmatically verify vulnerability reports before human sign-off.
+
+### Added
+- **Bounded autonomous testing loop** — orchestrates cycles (think → assign → dispatch → execute → gate) with strict iteration caps, per-run token limits, and no-progress early stopping to guarantee bounded spend.
+- **Operator workspace & provenance graph** — projects run records, evidence hashes, and coverage status into a unified visual graph and dashboard, maintaining 100% auditability without model guesswork.
+- **Programmatic report verification ("report-lint")** — a deterministic verifier that enforces standardized report structure, validates all cited attachments, redacts accidental secrets/credentials, and flags prohibited AI speech markers.
+- **Independent cross-model review** — findings produced by one model family must pass an independent second-opinion review conducted by an entirely different model family, failing closed on disagreement.
+
+### Fixed
+- **CLI version precedence resolution** — resolved an environment path conflict where legacy local CLI binaries shadowed updated packages, ensuring reviewer checks run with supported runtime capabilities.
+- **Proxy configuration-drift recovery** — hardened the enforcement gateway to recover cleanly from mid-flight configuration adjustments without silently dropping valid test passes.
+
+### Rough next steps
+- Multi-provider model diversity: integrate alternative local and hosted model runtimes behind strict data-retention authorization gates.
+- Deepen per-vulnerability-class proof criteria for automated finding-triage gates.
+
+---
+
+## 2026-10-26 — Attack surface expansion, auth-bypass & cache-testing families ✅
+
+**Milestone.** Substantially expanded the automated procedure catalog across high-impact vulnerability classes, and instituted a durable submission ledger tracking vulnerability validity independently from platform decisions.
+
+### Added
+- **Authentication bypass testing family** — reviewable playbooks covering modern authentication primitives: SAML assertions, OAuth 2.0 grant types, JWT integrity checks, MFA validation sequences, and password-reset invariants.
+- **Web cache deception & unkeyed input suite** — automated detectors for cache-key discrepancies, unkeyed header reflections, and path delimiter misinterpretations.
+- **DNS rebinding detection** — automated dual-stage prober pairing deterministic network checks with headless browser confirmation to safely identify host-validation weaknesses.
+- **Submission & duplicate intelligence ledger** — a structured ledger recording all findings, platform outcomes, and root-cause analyses to systematically benchmark automation accuracy and improve coverage.
+
+### Fixed
+- **Scoped planning model calibration** — tightened planning prompt bounds to eliminate empty candidate leads and enforce strict adherence to target scope definitions.
+
+### Rough next steps
+- Bounded autonomous orchestration loop to pump task queues automatically.
+- Unified operator dashboard and evidence provenance graph.
+
+---
+
+## 2026-10-25 — Specialized multi-agent hierarchy & tool-bounded execution ✅
+
+**Milestone.** Decomposed the monolithic test runner into a disciplined hierarchy of specialized agents. Each agent operates under strict least-privilege constraints with deterministic checklists to prevent uncontrolled tool invocation.
+
+### Added
+- **Domain-specialized agent hierarchy** — introduced 5 discipline leads (Reconnaissance, JavaScript analysis, API endpoints, Client-side behavior, Server-side logic) coordinating 29 targeted worker subagents.
+- **Enforced tool boundary (least privilege)** — worker subagents are strictly restricted to small, audited tool allowlists (≤14 tools per agent) with zero raw network or shell access. All target interaction must traverse the authorized enforcement gateway.
+- **Mandatory checklist gates** — every subagent task is governed by an explicit checklist; tasks cannot resolve as complete until each item is deterministically proven or refuted with recorded evidence hashes.
+
+### Confirmed by validation
+- Subagent boundaries hold firm: agents cannot invoke tools outside their defined manifest, and state-changes without explicit operator approval remain impossible.
+- Evidence integrity is preserved: every request/response pair generated during agent execution is captured as tamper-evident content-addressed storage.
+
+### Rough next steps
+- Add procedures for advanced authentication and caching vulnerability classes.
+- Build autonomous task pumping and state graph projection.
+
+---
+
 ## 2026-10-24 — Offline test harness for failure & verification paths ✅
 
 **Milestone.** The hardest-to-test parts of the system — what happens when the AI provider misbehaves,
