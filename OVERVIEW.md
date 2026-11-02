@@ -1,7 +1,7 @@
 # Hack Bot (hb) — High-Level Overview
 
 **Status:** Active R&D / Operational Testing  
-**Last Updated:** 2026-10-27  
+**Last Updated:** 2026-11-02  
 **Scope:** Architecture summary, bug counts, current issues, and applied fixes.
 
 ---
@@ -47,27 +47,26 @@ Hack Bot (`hb`) is a disciplined, safety-first automation harness designed for a
 
 Testing and validation across targets and internal infrastructure have identified two distinct categories of bugs: **Target Security Vulnerabilities** found by the harness on authorized programs, and **Internal Harness & Infrastructure Bugs** discovered and resolved within Hack Bot itself.
 
-### A. Target Security Vulnerabilities & Primitives Found (Total: 8 Confirmed + 5 Refuted)
+### A. Target Findings (Total: 13 Leads Tracked)
 
-| Program / Target | Severity / Class | Finding Summary | Status |
-|---|---|---|---|
-| **Neon** (Database Platform) | **HIGH** · Privilege Escalation | Dynamic-masking label injection (`anon` extension) allowing escalation to `cloud_admin` superuser. | Confirmed valid by program; closed as duplicate (S-0001). |
-| **Neon** (Database Platform) | **HIGH** · Authorization Bypass | Project transfer accept-step broken access control allowing cross-tenant project hijacking. | Confirmed valid by program; closed as duplicate (S-0002). |
-| **Neon** (Database Platform) | **INFO** · Reachability | Internal network reachability / host exposure. | Documented & mapped. |
-| **8x8** (HackerOne) | **HIGH** · CSPT | Client-Side Path Traversal on `pay.8x8.com` via unencoded `?transactionId=` concatenated into same-origin GET/POST endpoints. | Confirmed source→sink. |
-| **8x8** (HackerOne) | **MEDIUM/HIGH** · SSRF Candidate | `client_id_metadata_document` SSRF candidate on `sso.8x8pilot.com`. | Pre-login GET 302s; unauth POST token trigger pending. |
-| **8x8** (HackerOne) | **MEDIUM** · IDOR Blueprint | Cross-tenant WebSocket IDOR blueprint on chalet `/ws/v1` (derived from CCEB AsyncAPI). | Documented; internal-DNS endpoint discovery pending. |
-| **8x8** (HackerOne) | **MEDIUM** · Access Control | Advisor transcript cross-tenant access control weakness on `txt.8x8.studio`. | Gated on active session token. |
-| **8x8** (HackerOne) | **MEDIUM** · Code Execution Sink | Cookie-to-`eval()` execution sink in `vcc-na30.8x8.com` (`eval("("+Cookie.get(NAME)+")")`). | Confirmed sink; requires sibling `.8x8.com` cookie write. |
-| **OWASP Juice Shop** (Practice Lab) | **HIGH** · BOLA | Broken Object-Level Authorization identifying access-control flaws during initial autonomous test runs. | Validated & stored in evidence. |
-| *8x8 Refutations* | *5 Classes Refuted* | Open-redirect (`pay.8x8.com`, `sso.8x8.com`), amount tampering, VCC reflection-XSS, and secondary open-redirect tested and honestly refuted. | Refuted (Prevents false reports). |
+All target and program detail is anonymized. A recorded primitive or candidate signal is not counted as a finding until its impact is demonstrated end to end.
+
+| Outcome | Count | Notes |
+|---|---:|---|
+| **Reported — major** | **1** | High-severity finding, verified end to end and reported. |
+| **Informational** | **1** | Low-impact observation, documented. |
+| Unconfirmed primitives / conditional leads | 6 | Impact depends on an unproven prerequisite (session, scope permission or companion gadget). Tracked, not claimed. |
+| Refuted | 5 | Tested against negative controls and closed; prevented false reports. |
+| **Total leads tracked** | **13** | |
+
+Finding totals are the operator's current assessment, not platform acceptance or payout figures.
 
 ### B. Internal Harness & Infrastructure Bugs Identified & Fixed (Total: 8 Bugs)
 
 | Bug ID | Component | Description | Impact | Resolution |
 |---|---|---|---|---|
 | **BUG-01** | Port Assignment | Default port `:8888` shared across sessions without `HB_EGRESS` check. | Requests from one program could cross-pollinate into another program's egress. | Fixed via program-specific port allocation (`state/chain.port`). |
-| **BUG-02** | Egress Auditing | Host voice AI curls hitting `localhost:8888` (bound by `hb-egress`). | 465 benign system requests polluted 8x8 trace, 41 in Neon, 77 in Juice Shop. | Isolated egress port and added exclusion filter. |
+| **BUG-02** | Egress Auditing | Host voice AI curls hitting `localhost:8888` (bound by `hb-egress`). | 583 benign system requests polluted program traces across three programs. | Isolated egress port and added exclusion filter. |
 | **BUG-03** | Gateway Lifecycle | Egress returned `403 Risk Gate: config changed` upon mid-run edits. | Finder passes ran "blind" and halted without notifying operator. | Fresh gateway PID recycling & automated reload handling. |
 | **BUG-04** | Model Invocation | `runtime.py` raised `NotImplementedError` for OpenCode runtime. | DeepSeek Flash was unreachable; system was 100% dependent on single provider. | Architected task `t-031` with standalone runner & retention gates. |
 | **BUG-05** | Environment / PATH | Outdated global Codex binary (`0.139.0`) shadowed current NVM install (`0.164.0`). | Multi-model validator failed closed due to unsupported model flags. | Aligned PATH resolution to enforce >= 0.164.0 (`t-029`). |
@@ -89,11 +88,11 @@ Testing and validation across targets and internal infrastructure have identifie
 │ 2. Data Retention Compliance   │ Third-party free tiers retain data;   │
 │                                │ need strict provider-retention gate.  │
 ├────────────────────────────────┼───────────────────────────────────────┤
-│ 3. Target Credential Rotation  │ Secondary test identity (Principal C) │
-│                                │ expired on 8x8, pausing BOLA tests.   │
+│ 3. Target Credential Rotation  │ Secondary test identity expired;      │
+│                                │ cross-tenant tests paused.            │
 ├────────────────────────────────┼───────────────────────────────────────┤
 │ 4. Scope Method Boundary       │ Egress scope is read-only (GET/HEAD); │
-│                                │ unauth POST token SSRF probe blocked. │
+│                                │ unauth POST verify probe blocked.     │
 ├────────────────────────────────┼───────────────────────────────────────┤
 │ 5. Unassigned Finder Cards     │ Long-tail finder cards need explicit  │
 │                                │ subagent mappings in `agents/*.md`.   │
@@ -109,12 +108,12 @@ Testing and validation across targets and internal infrastructure have identifie
    - *Symptom:* Free model tiers do not guarantee Zero Data Retention (ZDR).
    - *Resolution:* Introducing `retention = "provider"` metadata in profiles and requiring `[authorization] allow_retaining_models = true` in program configuration before any non-ZDR model can be invoked.
 
-3. **Target Credential Expiration (8x8):**  
-   - *Symptom:* The authentication token for the secondary test principal (Principal C) expired.
-   - *Impact:* Cross-tenant BOLA/IDOR comparison oracles on `connect.8x8.com` cannot run automatically until refreshed.
+3. **Target Credential Expiration:**  
+   - *Symptom:* The authentication token for a secondary test identity expired.
+   - *Impact:* Cross-tenant comparison tests on the affected program cannot run automatically until refreshed.
 
-4. **Egress Scope Method Boundary on SSRF Trigger:**  
-   - *Symptom:* The pilot SSRF trigger on `sso.8x8pilot.com/v2/oauth/token` requires an unauthenticated `POST` request. The current `scope.toml` strictly enforces `methods = ["GET", "HEAD", "OPTIONS"]`.
+4. **Egress Scope Method Boundary on a Pending Verification Probe:**  
+   - *Symptom:* A pending verification probe requires an unauthenticated `POST` request. The program's scope policy strictly enforces `methods = ["GET", "HEAD", "OPTIONS"]`.
    - *Impact:* The automated model cannot fire the definitive verification probe; operator must explicitly authorize `POST` and restart egress.
 
 5. **Subagent Skill Coverage Distribution:**  
@@ -159,11 +158,13 @@ The following foundational upgrades and bug fixes have been completed and verifi
 ┌──────────────────────────────────────┬───────────────────────────────┐
 │ Metric                               │ Value                         │
 ├──────────────────────────────────────┼───────────────────────────────┤
-│ Confirmed Target Security Findings   │ 8 findings (2 High valid)     │
-│ Refuted False Positives              │ 5 classes refuted             │
+│ Target Leads Tracked                 │ 13 total                      │
+│ Reported Findings                    │ 1 major + 1 informational     │
+│ Unconfirmed Primitives / Conditional │ 6 tracked, not claimed        │
+│ Refuted False Positives              │ 5 refuted                     │
 │ Internal Harness Bugs Fixed          │ 8 resolved                    │
 │ Lifetime Scope-Compliant Requests    │ 2,264 allowed (0 out-of-scope)│
-│ Evidence Storage Integrity           │ 100% content-addressed       │
+│ Evidence Storage Integrity           │ 100% content-addressed        │
 │ Available Disciplines / Subagents    │ 5 Leads / 29 Subagents        │
 │ Available Finder Skill Cards         │ 79 cards                      │
 └──────────────────────────────────────┴───────────────────────────────┘
