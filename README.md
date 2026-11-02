@@ -1,4 +1,4 @@
-# Project Harvester — public progress log
+# Project Halberd — public progress log
 
 A personal R&D project: an automation harness for **authorized, scope-bounded security testing**
 (bug-bounty and penetration-testing workflows).

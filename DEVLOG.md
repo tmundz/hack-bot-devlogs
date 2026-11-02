@@ -9,7 +9,7 @@ Versioned milestones start at **v-1.0**. Earlier entries remain an unversioned h
 
 ## 2026-11-02 — Post-v-1.0: Authenticated research & verification outcomes
 
-**Development update.** Project Harvester now has controlled end-to-end evidence for authenticated browser,
+**Development update.** Project Halberd now has controlled end-to-end evidence for authenticated browser,
 HTTP and API work, alongside clearer coverage, investigation status and operator control. The practical
 goal is not to generate more alarming responses: it is to distinguish a real finding from expected
 behavior, a blocked test or a chain whose impact still depends on an unproven prerequisite.

@@ -170,4 +170,4 @@ The following foundational upgrades and bug fixes have been completed and verifi
 └──────────────────────────────────────┴───────────────────────────────┘
 ```
 
-*This document is maintained as part of Project Harvester progress tracking.*
+*This document is maintained as part of Project Halberd progress tracking.*
