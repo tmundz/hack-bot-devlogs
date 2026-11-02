@@ -3,6 +3,156 @@
 High-level progress only. No code, no internal design, no exploit or target detail.
 Most recent first.
 
+Versioned milestones start at **v-1.0**. Earlier entries remain an unversioned history.
+
+---
+
+## 2026-11-02 — Post-v-1.0: Authenticated research & verification outcomes
+
+**Development update.** Project Harvester now has controlled end-to-end evidence for authenticated browser,
+HTTP and API work, alongside clearer coverage, investigation status and operator control. The practical
+goal is not to generate more alarming responses: it is to distinguish a real finding from expected
+behavior, a blocked test or a chain whose impact still depends on an unproven prerequisite.
+
+This continues the **v-1.0 supervised R&D milestone**; it is not a new release or a claim of dependable
+unattended vulnerability discovery.
+
+### What the system is doing
+- **Session-aware research** — explicitly selected, operator-owned sessions can be used across browser
+  inspection and request comparisons while credentials remain private. Account identity is checked
+  against actual returned data, not just a successful HTTP status.
+- **More honest coverage** — completed work is preserved, missing inputs remain visible, and refreshed
+  views no longer imply that an unperformed or blocked test succeeded.
+- **Actionable investigations** — related signals are grouped, decisions retain their reasons, and
+  follow-up work stays linked to the originating observation. A signal is not automatically a finding.
+- **Deliberate model use** — routine work starts on smaller profiles; stronger planning and independent
+  critique remain separate. Availability fallbacks are explicit, not a way around safety refusals.
+- **Clearer supervision** — waiting, blocked, failed and active work are distinguished. Explicit
+  reassignment preserves history instead of silently restarting failed investigations.
+
+### Research snapshot
+
+Anonymized cumulative activity, frozen at **2026-11-02 04:06 UTC**; the live run continues afterward.
+
+| Measure | Recorded total |
+|---|---:|
+| Confirmed findings — operator tally | 1 |
+| Informational findings — operator tally | 1 |
+| Research task cards | 279 |
+| Task cards marked done | 172 |
+| API inventory rows | 842 |
+| API baseline records | 5,912 |
+| Differential test-case records | 10,515 |
+
+The finding totals are the operator's current assessment, **not platform acceptance or payout figures**.
+Activity rows include different identities, variants and outcomes; they are not counts of distinct
+vulnerabilities, successful requests or fully tested endpoints. Expected-behavior, refuted and
+conditional leads are not added to the confirmed total.
+
+### What verification changed
+
+Anonymized examples from existing triage notes and controlled validation, not new public bug disclosures:
+
+| Initial signal | What the checks established | How it is tracked |
+|---|---|---|
+| Reflected cross-origin access headers | The observed responses did not grant credentialed sharing, and no authenticated cross-origin data read was demonstrated. | Not a confirmed credentialed data leak; no claim beyond the checked responses. |
+| A success-like response where access had been refused | The response was an edge-security challenge rather than protected application content; negative controls matched it. | False positive for authorization bypass, not a confirmed finding. |
+| A credentialed cross-origin chain | Supporting behavior was recorded, but script execution on a trusted origin and the authenticated read pre-check remained unproven. | Conditional impact; no additional confirmed finding claimed. |
+| A successful HTTP status during an identity check | In the controlled lab, an empty user response also had a successful status. Owned identities were distinguished using returned account data and negative controls. | Expected protocol behavior, not an authentication bypass. |
+
+The useful outcome is sometimes a closed lead or a narrower claim. A recorded primitive is not the
+same as a demonstrated attack chain, and agreement between models does not supply a missing prerequisite.
+
+### Controlled validation for this work
+
+Separate from the research totals above:
+
+| Controlled check | Result |
+|---|---:|
+| Acceptance criteria passed in independent review | 12 / 12 |
+| Separately owned test identities | 2 |
+| Explicitly approved authentication actions, each used once | 2 |
+| Authenticated baseline requests completed | 20 |
+| Authenticated differential requests completed | 12 |
+| Recorded evidence files passing integrity checks | 48 |
+
+- Positive owned-account and unauthenticated contrasts were exercised through browser, HTTP and API
+  consumers. Authentication actions were not retried, and no additional write was performed.
+- Fast validation and selected regression checks passed. The full slower suite was **not** rerun.
+- Availability fallback was checked with a controlled provider-boundary failure and real downstream
+  handoffs; this was not an experiment that forced a live provider outage.
+- Independent completion review passed. Its documentary follow-ups were applied. This validates the
+  exercised machinery, **not a vulnerability-detection success rate or production-readiness guarantee**.
+
+### Next focus
+- Keep operator finding decisions and generated summaries aligned.
+- Measure fresh reproduction quality and cost per validated result, rather than raw signal volume.
+- Continue controlled evaluation without publishing target, account, credential or exploit details.
+
+---
+
+
+## 2026-10-30 — v-1.0: Coordinated research, shared evidence & execution reliability
+
+**Milestone.** The first versioned development milestone brings together the October 28–30 runtime,
+research-state and orchestration work. Hackbot can coordinate concurrent specialist tasks, preserve
+shared discoveries and corrections, and give the operator a clearer view of readiness, failures and
+unfinished work. This is a **supervised R&D milestone**, not a claim of production readiness or
+dependable unattended vulnerability discovery.
+
+### Added
+- **Lead-aware concurrent execution** — specialist tasks run under their owning leads, with explicit
+  dependencies, bounded concurrency and operator priorities. Leads return to evaluate new child results
+  instead of being rerun unconditionally.
+- **Background operation & steering** — the operator can pause, resume, reprioritize, instruct, cancel
+  or stop work while unrelated investigations continue. Workspace views refresh as runs finish.
+- **Unified startup report** — read-only checks show readiness, unfinished work, model routes and
+  whether to start, attach to an existing run, wait for instructions or resolve a blocker.
+- **Shared research memory** — all seven leads can contribute and retrieve program-local observations
+  and reusable primitives, retaining attribution and correction history.
+- **API investigation workflow** — a unified inventory connects discovery sources, identity-aware
+  baselines, controlled differential cases, evidence references and explicit incomplete or gated outcomes.
+  Anomalies remain investigation candidates, not automatically confirmed vulnerabilities.
+- **Bounded browser integration** — authorized workers can reuse a validated operator-owned browser
+  for read-only navigation and limited diagnostics without receiving unrestricted browser tools.
+- **Layered independent critique** — finding triage now includes specialist, reproduction and impact
+  critiques. Evidence-bearing specialist results can also receive a separate cross-family peer opinion.
+- **Explicit model routing & report learning** — workers follow saved operator model roles with named
+  availability fallbacks. A human-gated local learning workflow preserves report outcomes and corrections;
+  it does not submit reports, train models or automatically adopt changes.
+
+### Fixed
+- Nested planner results are preserved and schema-checked; failed commands and database reads surface
+  as failures rather than successful empty work.
+- Per-task leases prevent duplicate launches. Interrupted tasks may resume once; failed or repeatedly
+  interrupted work is quarantined without stopping unrelated eligible tasks.
+- Shared-record readers and projections preserve original provenance, corrections and independently
+  discovered inventory. Terminal agent records resist replacement, and checklist changes retain history.
+- Proxy lifecycle checks verify process ownership before reuse or teardown. Model-attempt records
+  preserve usage and producer information without double-counting linked summaries.
+
+### Validation & limits
+- The offline benchmark passed **all six scenarios**: concurrent work with lead relaunch and failure
+  isolation; one-time interruption recovery; failed-run quarantine across restarts; waiting for an
+  in-flight child; cross-family peer work; and append-only record protections. It completed in **24.2
+  seconds** on the local workstation, with no model calls or target traffic.
+- Controlled-lab acceptance records include passing API-engine, orchestration and startup reviews.
+  The peer-review implementation has fixes and regression evidence after a **CHANGES** verdict, but
+  no subsequent review round is recorded. These records are not a finding-quality benchmark.
+- **Budget clarification:** configured hard model-spend limits currently refuse launch when native
+  enforcement cannot be established. Omitted limits mean uncapped execution; iteration bounds and
+  nominal token settings are not a spend guarantee. This supersedes the stronger October 27 wording.
+- Model agreement and stored-evidence integrity checks are not fresh reproduction or demonstrated
+  impact. Worker isolation is configuration/tool isolation, not an operating-system sandbox.
+- A fast test mode and offline benchmark exist; broader acceptance-policy simplification remains
+  proposed. Historical acceptance records do not constitute a new full-suite pass for this update.
+
+### Rough next steps
+- Make review dispositions a dependable gate for dependent work.
+- Strengthen fresh reproduction and class-specific impact proof before confirming findings.
+- Establish enforceable model-spend bounds and safer continuation after interrupted side effects.
+- Extend controlled live evaluation without treating role ownership or review coverage as detection accuracy.
+
 ---
 
 ## 2026-10-27 — Bounded autonomous loop, operator workspace & programmatic report linting ✅
