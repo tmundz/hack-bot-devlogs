@@ -7,11 +7,11 @@ A personal R&D project: an automation harness for **authorized, scope-bounded se
 and **no internal design detail**. It exists to record milestones and show the work is real and ongoing.
 The implementation lives in a separate private repository.
 
-**Current development milestone: [v-1.0](./DEVLOG.md#2026-10-30--v-10-coordinated-research-shared-evidence--execution-reliability)**
-— supervised R&D, dated 2026-10-30. Versioning starts here; earlier milestones remain unversioned.
+**Current development milestone: [v-1.1](./DEVLOG.md#2026-11-15--v-11-persistent-investigation-graph-cross-agent-discovery--adversarial-execution-integrity)**
+— supervised R&D, dated 2026-11-15. Unites the persistent investigation graph (PIG), autonomous lead loops, cross-agent discovery, and an 18-defect adversarial execution audit.
 
-**Latest development update:** [2026-11-02 — Post-v-1.0: Authenticated research & verification outcomes](./DEVLOG.md#2026-11-02--post-v-10-authenticated-research--verification-outcomes).
-Includes an anonymized activity snapshot, the operator's finding tally and examples of leads narrowed by verification.
+**Latest development update:** [2026-11-15 — v-1.1: Persistent investigation graph, cross-agent discovery & adversarial execution integrity](./DEVLOG.md#2026-11-15--v-11-persistent-investigation-graph-cross-agent-discovery--adversarial-execution-integrity).
+Includes the adversarial defect repair matrix, cross-program graph activity snapshot, and 250+ deterministic offline validation passes.
 
 ## What the project is (high level)
 

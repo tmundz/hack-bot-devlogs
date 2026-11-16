@@ -7,6 +7,116 @@ Versioned milestones start at **v-1.0**. Earlier entries remain an unversioned h
 
 ---
 
+## 2026-11-15 — v-1.1: Persistent investigation graph, cross-agent discovery & adversarial execution integrity
+
+**Milestone.** Project Halberd reaches development milestone **v-1.1**, uniting persistent investigation state, autonomous team-lead loops, cross-discipline discovery events, and an extensive adversarial hardening pass. Research observations no longer live in transient agent memory: they form a queryable, typed investigation graph with cryptographically backed evidence provenance. At the same time, an 18-defect adversarial audit has reinforced execution integrity, transport isolation, deduplication, and cross-model finding verification.
+
+This is a **supervised R&D milestone**; it is not a claim of production readiness or dependable unattended vulnerability discovery.
+
+### What the system is doing
+- **Persistent Shared Investigation Graph (PIG)** — Observations, endpoints, dataflows, trust boundaries, hypotheses, primitives, and gadgets are tracked as typed nodes and relationships in a persistent graph. Every node enforces explicit knowledge states (`observed`, `hypothesis`, `validated`, `refuted`, `unknown`) and links back to tamper-evident content-addressed evidence. A hypothesis never silently morphs into an established fact.
+- **Autonomous lead loops & event-driven discovery** — Discipline leads (Recon, JavaScript, API, Client, Server) execute persistent, restartable `OBSERVE -> FORM_HYPOTHESIS -> PRIORITIZE -> PLAN -> DELEGATE -> EXECUTE -> EVALUATE -> RECORD -> REPLAN` cycles. Typed discovery events (e.g. unmapped endpoints or auth boundaries revealed by JavaScript analysis) automatically notify relevant leads without requiring monolithic reprompting.
+- **Adversarial execution integrity & transport hardening** — Repaired 18 subtle failure modes across HTTP egress, session isolation, loop deduplication, and verification gates. Pre-network credential validation rejects expired tokens; per-principal session rotations lock atomically; redirects preserve GraphQL bodies rather than transforming them; and partial/truncated responses fail closed rather than producing ungrounded findings.
+- **Deterministic static analysis & reverse engineering (REA)** — AST parsing (Babel) and code pattern extraction (Semgrep) run deterministically offline without model spend. An integrated reverse-engineering pipeline enables offline APK manifest auditing, deep-link mapping, and exported-component inspection with scoped ADB loopback forwarding.
+- **Mobile application attack-surface expansion** — Integrated 22 structured Android vulnerability classes (AL-01 to AL-22) into the application surface analysis path, covering mobile authorization, IPC interfaces, TLS/trust verification, crypto misuse, and hybrid webview bridges.
+- **Cost-aware multi-provider model routing** — Dynamic role routing pairs routine note-taking and structured documentation with fast, cost-effective models (Gemini-first reporting), while reserving frontier reasoning for planning and verification. Strict cross-family model independence remains mandatory for peer reviews.
+- **State-machine reporting pipeline** — A deterministic lifecycle (`DRAFT -> EVIDENCE_REQUIRED -> READY_FOR_REVIEW -> APPROVED -> SUBMITTED`) governs vulnerability report drafts. Reports must satisfy offline schema checks, credential redaction, attachment verification, and human operator approval before submission.
+- **Isolated browser profiles & session management** — Browser automation operates on dedicated, disposable program profiles strictly isolated from operator workstations. Multi-identity sessions maintain private cookie jars with automatic expiration tracking.
+
+### Adversarial audit & repair summary
+
+A systematic adversarial review of current-worktree execution, graph, and reviewer contracts identified 18 specific failure modes. All were addressed with focused failing-before baselines and passing-after regression checks on controlled local fixtures:
+
+| Ref | Category | Condition addressed | Enforced invariant & contract |
+|---|---|---|---|
+| **E1** | Egress / Auth | Stale or inapplicable captured credentials hitting targets. | Pre-network validation rejects expired or mismatched credentials; preference cookies cannot mask expired auth tokens; named 401s halt execution. |
+| **E2** | Session Isolation | Concurrent workers conflicting on credential rotation or revocation. | Per-principal session locking serializes rotation/revocation; atomic private cookie-jar updates prevent cross-worker pollution. |
+| **E3** | HTTP Transport | HTTP redirects mutating POST bodies or breaking GraphQL queries. | Redirects are never followed automatically; original POST bodies, variables, and headers are preserved; redirects are treated as distinct observations. |
+| **E4** | Evidence Integrity | Upstream network disconnects or body truncation masked as success. | Partial/error evidence is preserved with intact status/headers but marked `complete=false` and `body_unavailable=true`; partial evidence cannot verify a finding. |
+| **E5** | Protocol Safety | Model-injected control headers or host framing conflicts. | Host framing is validated pre-network; unsupported framing or internal control headers are refused before egress; internal gateway references never leak to targets. |
+| **I1** | Investigation Logic | Inconclusive tool executions falsely closing valid hypotheses. | Inconclusive technique failures preserve open hypotheses; refutations require explicit, completed falsification with intact evidence and recorded rationale. |
+| **I2** | Traceability | Experiments disconnected from originating hypothesis IDs. | Task experiments maintain bidirectional links across all hypothesis identifier formats, preserving decision context without claiming premature confirmation. |
+| **I3** | Loop Scheduling | Repetitive tasks causing infinite retry loops or skipping new evidence. | Identical intents deduplicate; tasks re-dispatch only when canonical inputs, scope, or evidence hashes materially change; failed tasks enter quarantine. |
+| **O1** | Replay Verification | Loose string matches or request-only assertions passing verification. | Replay verifier enforces strict, field-specific assertion matching; request-only assertions prove collection, not vulnerability verification. |
+| **O2** | Checklist Gates | Incomplete checklists or broken artifact references passing review. | Completion reviews require 100% unique checklist step coverage and nonempty, verified artifact citations; missing steps or symlink escapes deny sign-off. |
+| **O3** | Reviewer Independence | Self-review or provider-family collusion during second-opinion reviews. | Review scaffolding verifies actual model family responder independence; an identical model family or unverified identity cannot approve a finding. |
+| **O4** | Review Durability | In-flight review obligations lost across process crashes. | Review obligations persist canonically across restarts; missing model provenance holds task completion for operator intervention rather than guessing. |
+| **G1** | Static Analysis | Static code patterns treated as confirmed runtime vulnerabilities. | Static source/sink relationships project candidate entities with explicit uncertainty scores; static discovery is an investigation input, not exploit proof. |
+| **G2** | Graph Integrity | Repeated agent writes creating duplicate primitive entities. | Shared graph maintains idempotent writes and contributor history, preserving multi-agent provenance without entity duplication. |
+
+### Research & operational activity snapshot
+
+Cumulative anonymized activity across active testing programs, frozen at **2026-11-15 19:30 UTC**:
+
+| Measure | Recorded total | Change since Nov 2 |
+|---|---:|---:|
+| Confirmed findings — operator tally | 1 | — |
+| Informational findings — operator tally | 1 | — |
+| Tracked primitives / conditional leads | 6 | — |
+| Refuted false positives / closed negative controls | 5 | — |
+| Total research task cards | 317 | +38 |
+| Task cards marked done | 185 | +13 |
+| Persistent graph events recorded (`pig_events`) | 33,672 | *New in v-1.1* |
+| Mapped investigation nodes (`pig_nodes`) | 14,192 | *New in v-1.1* |
+| Tracked investigation relationships (`pig_edges`) | 18,548 | *New in v-1.1* |
+| Cross-agent discovery events (`discovery_events`) | 689 | *New in v-1.1* |
+| API inventory rows | 842 | — |
+| API baseline records | 5,912 | — |
+| Differential test-case records | 10,515 | — |
+
+Finding counts reflect the operator's verified tally, **not platform acceptance or payout figures**. Expected behavior, refuted leads, and unproven primitives are rigorously excluded from confirmed totals.
+
+### What verification changed
+
+Anonymized examples from recent validation and triage notes:
+
+| Initial signal | What the verification checks established | How it is tracked in v-1.1 |
+|---|---|---|
+| Inconclusive HTTP timeout during state-change test | Network disruption interrupted the request; response body was truncated (`body_unavailable=true`). | Marked `incomplete=true`; hypothesis preserved as open rather than falsely marked refuted. |
+| Static AST detection of potential injection sink | Source parameter is parsed through a strict schema sanitizer before reaching the sink; no dynamic execution demonstrated. | Recorded as static candidate with uncertainty score; no finding claimed without dynamic PoC. |
+| Second-opinion review agreeing with finding | Reviewer model was an alias from the same provider family as the producing agent. | Flagged as family collision; review obligation held in pending state until an independent model family reviews. |
+| Apparent auth bypass on mobile deep link | Exported intent handler accepts parameter, but target activity validates caller signature before processing data. | Refuted by reverse-engineering component inspection; recorded in investigation graph as refuted. |
+| Credentialed differential test returning 200 OK | Both privileged and unprivileged sessions received HTTP 200, but payload contained a standard public login shell. | Correctly classified as public edge behavior, not broken object-level authorization. |
+
+### Controlled validation for this release
+
+All repairs and new components were exercised against offline, controlled local fixtures with zero live bug-bounty target traffic:
+
+| Controlled validation suite | Checks passed | Scope & invariants exercised |
+|---|---:|---|
+| Go core CLI & MCP transport (`./mcp`, `./cmd/hbctl`) | 100% (All PASS) | Egress transport, session locking, credential expiry, host framing, LOC ceilings. |
+| Real loopback execution integrity (`test_execution_integrity.py`) | 6 / 6 | Real `hb-mcp` -> `hb-egress` -> loopback proxy; credential isolation & body truncation. |
+| Egress policy & scope boundary (`test_policy_boundary.py`) | 25 / 25 | Host allowlists, method restrictions, risk-tier gating, config-drift refusal. |
+| Multi-identity session manager (`test_sessions.py`) | 21 / 21 | Cookie rotation, private jar persistence, HttpOnly export, cross-worker isolation. |
+| Deterministic finding replay (`test_finding_replay.py`) | 27 / 27 | Typed assertion matching, response-field validation, rejection of error evidence. |
+| Review checklist scaffolding (`test_review_scaffolding.py`) | 22 / 22 | Step uniqueness, artifact-line resolution, rejection of symlink escapes. |
+| Persistent investigation graph (`test_pig.py`) | 21 / 21 | Referential integrity, state transitions, provenance history, adversarial dedup. |
+| Deterministic research tools (`test_research_tools.py`) | 16 / 16 | Real Babel AST extraction, Semgrep pattern queries, offline artifact analysis. |
+| Shared research primitives (`test_shared_primitives.py`) | 9 / 9 | Cross-agent observation sharing, primitive attribution, idempotent writes. |
+| Cross-model peer review (`test_peer_review.py`) | 19 / 19 | Model-family independence, fail-closed disagreement, obligation recovery. |
+| Autonomous loop cycle (`test_loop_cycle.py`) | 10 / 10 | Coverage-signature triggers, token ceiling stops, stagnation detection. |
+| Orchestration & scheduler (`test_orchestration.py`) | 32 / 32 | Task leasing, concurrency bounds, failure quarantine, safe resumption. |
+| Structured reporting pipeline (`test_report_pipeline.py`) | 15 / 15 | Lifecycle state machine, schema linting, credential redaction, video PoC integrity. |
+| Model routing & admission (`test_model_admission.py`) | 23 / 23 | Role-based model selection, availability fallbacks, data-retention gates. |
+| Account flow authorization (`test_account_flow.py`) | 6 / 6 | Controlled multi-tenant contrast, positive/negative session authorization. |
+
+- **Zero live target traffic**: All suites executed against local mock servers, recorded HTTP fixtures, or disposable SQLite databases.
+- **Zero model spend**: Verification used scripted and deterministic stand-ins; live provider calls were not required for regression validation.
+- **Fail-closed guarantees**: Replay verifiers, egress gateways, and peer review gates confirmed 100% fail-closed semantics under error injection.
+
+### Operational limits
+- Mitmproxy body truncation during interrupted flows is recorded honestly (`body_unavailable=true`); unavailable bytes are never synthesized.
+- Passing offline checklist verification does not guarantee live vulnerability discovery on target applications.
+- Generic HTTP 200 responses do not prove authenticated identity recognition; target-specific data assertions remain required.
+- Hard model-spend limits refuse execution when unsupported by native provider APIs; iteration and token caps act as backstops.
+
+### Next focus
+- Continuous live monitoring across authorized target programs using the new persistent lead loops.
+- Benchmarking cost per validated finding across Gemini-first and frontier model configurations.
+- Expanding offline mobile test coverage for hybrid app bridges and native library interfaces.
+
+---
+
 ## 2026-11-02 — Post-v-1.0: Authenticated research & verification outcomes
 
 **Development update.** Project Halberd now has controlled end-to-end evidence for authenticated browser,
